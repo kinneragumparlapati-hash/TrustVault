@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustVault | Secure Documents</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fc;
+      color: #18233c;
+    }
+    header {
+      background: white;
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    header h2 { color: #2457d6; margin: 0; }
+    main { max-width: 900px; margin: 40px auto; padding: 20px; }
+    .hero {
+      text-align: center;
+      background: #e1eaff;
+      padding: 45px 20px;
+      border-radius: 18px;
+    }
+    .hero h1 { font-size: 36px; }
+    .hero p { line-height: 1.7; }
+    button, .upload {
+      background: #2457d6;
+      color: white;
+      padding: 13px 20px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .documents {
+      background: white;
+      padding: 25px;
+      margin-top: 25px;
+      border-radius: 15px;
+    }
+    .file {
+      padding: 14px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      overflow-wrap: anywhere;
+    }
+    #message { color: #2457d6; }
+    footer { text-align: center; padding: 25px; color: #65718a; }
+    @media(max-width: 600px) {
+      .hero h1 { font-size: 28px; }
+      main { margin: 15px auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>🔐 TrustVault</h2>
+    <span>Secure Document Sharing</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p>YOUR DOCUMENTS, YOUR CONTROL</p>
+      <h1>Protect your important documents.</h1>
+      <p>Manage your documents in one simple place.</p>
+      <label class="upload">
+        + Select Document
+        <input id="fileInput" type="file" multiple hidden>
+      </label>
+    </section>
+
+    <section class="documents">
+      <h2>My Documents</h2>
+      <p id="message">No documents selected yet.</p>
+      <div id="fileList"></div>
+    </section>
+  </main>
+
+  <footer>TrustVault · Project Demo</footer>
+
+  <script>
+    const input = document.getElementById("fileInput");
+    const list = document.getElementById("fileList");
+    const message = document.getElementById("message");
+
+    input.addEventListener("change", () => {
+      for (const file of input.files) {
+        const row = document.createElement("div");
+        row.className = "file";
+
+        const name = document.createElement("span");
+        name.textContent = "📄 " + file.name;
+        const download = document.createElement("button");
+        download.textContent = "Download";
+        download.onclick = () => {
+          const url = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = file.name;
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        };
+
+        row.append(name, download);
+        list.appendChild(row);
+      }
+
+      if (list.children.length > 0) {
+        message.textContent = list.children.length + " file(s) selected in this session.";
+      }
+      input.value = "";
+    });
+  </script>
+</body>
+</html>
